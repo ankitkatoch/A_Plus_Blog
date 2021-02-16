@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load hitcount_tags %}
+{% block content %}
+   {% for message in messages %}
+<div class="alert alert-success alert-dismissible fade show m-0" role="alert">
+  <strong>Message : </strong> {{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+    {% endfor %}
+    <div class="card mb-2 shadow p-3 mb-5 rounded">
+  <div class="card-body">
+      <div class="row">
+          <div class="col-md-12 text-center mb-2">
+          <img class="img-fluid" src="{{ object.blog_image.url }}" alt="" height="400" width="500">
+              </div>
+      </div>
+{#  Share with your friends button start #}
+            <div class="row">
+          <div class="col-md-12 text-center mb-2">
+              <a type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">
+                  <i class="fa fa-share-alt-square mx-1" style='font-size:22px;'></i>Share</a>
+              {#  Share with your friends button end #}
+          </div>
+            </div>
+      <div class="row">
+    <h5 class="card-title display-6">{{ object.title}}</h5>
+      <p class="card-text"><strong class="text-primary">Created on : </strong>{{ object.created_on }} by
+          <i><a href="{% url 'author_profile' object.author.id %}">{{ object.author.username }}</a></i>
+          <i class="fa fa-eye ps-3" style='font-size:22px;'></i> {% get_hit_count for object %}
+          <i class="fa fa-book ps-5 text-success" style='font-size:22px;'></i><span> {{ object.get_readtime }}</span>
+      </p>
+    <p>{{ object.description }}</p>
+<!--          Reply section -->
+<!--          {% if request.user != object.author %}-->
+<!--          <p>-->
+<!--  <a class="btn btn-success" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">-->
+<!--    <i class="fa fa-reply text-white ml-2"></i> Reply-->
+<!--  </a>-->
+<!--</p>-->
+<!--<div class="collapse" id="collapseExample">-->
+<!--  <div class="card card-body">-->
+<!--        <form action="{% url 'share_with_friends' %}" method="post">-->
+<!--            {% csrf_token %}-->
+
+<!--            <div class="mb-3">-->
+<!--            <textarea type="email" name="reply"rows="8" class="form-control" id="reply" placeholder="Write your reply here.."></textarea>-->
+<!--          </div>-->
+
+<!--        <button type="submit" class="btn btn-primary ms-4"><i class="fa fa-paper-plane text-white ml-2"></i> Send Reply</button>-->
+
+<!--        </form>-->
+<!--  </div>-->
+<!--</div>-->
+<!--          {% endif %}-->
+<!--        Reply section-->
+          </div>
+      {% if request.user == object.author %}
+<a href="{% url 'blog_update' object.slug %}" class="btn btn-primary text-white"><i class="fa fa-edit text-white mx-2"></i>Update</a>
+      <a href="{% url 'blog_delete' object.slug %}" class="btn btn-danger mx-5"><i class="fa fa-trash text-white mx-2"></i>Delete</a>
+        {% endif %}
+  </div>
+</div>
+
+    {% if related_items %}
+        <h2 class="text-success">Related Articles</h2>
+        <div class="row m-2">
+    {% for tag in related_items %}
+        <div class="card mb-2 mx-2 col-md-5 text-center">
+        <img class="rounded mx-auto d-block mb-1" src="{{ tag.blog_image.url }}" alt="image" height="100" width="100">
+        <a class="card btn btn-outline-primary mb-1" href="{% url 'blog_detail' tag.slug %}">{{ tag }}</a>
+        </div>
+            {% if forloop.counter|divisibleby:"2" %}
+            </div>
+            <div class="row m-2 ">
+        {% endif %}
+        {% endfor %}
+        </div>
+    {% endif %}
+{#  Share blog with your friends  #}
+{% if request.user.is_authenticated %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-success" id="exampleModalLabel">Share with your friends</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+        <form action="{% url 'share_with_friends' %}" method="post">
+            {% csrf_token %}
+      <div class="modal-body">
+
+          <div class="mb-3">
+            <label for="recipient-email" class="col-form-label">Friend's E-mail address:</label>
+            <input type="email" name="email" class="form-control" id="recipient-email" required>
+          </div>
+          <input type="hidden" name="url_name" value="{{ request.build_absolute_uri }}">
+                    <div class="mb-3">
+            <label for="recipient-area" class="col-form-label">Any Message (optional):</label>
+                        <textarea type="email" name="message" class="form-control" id="recipient-area"></textarea>
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary mx-auto"><i class="fa fa-paper-plane text-white ml-2"></i> Share</button>
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+<h5 class="text-danger">Access denied. You need to <a href="{% url 'login' %}">Login</a> first.</h5>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

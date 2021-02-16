@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block style %}
+.card{
+    margin:auto;
+}
+.card img{
+    margin:auto;
+}
+{% endblock %}
+{% block content %}
+{% load static %}
+
+<div class="row mt-3">
+    <div class="col-md-12 text-center">
+        <div class="card col-md-6 text-center">
+            {% for object in object_list1 %}
+        <img class="bd-placeholder-img rounded-circle mt-1" src="{{ object.profile.profile_image.url }}" width="140" height="140" alt="not found"/>
+            {% empty %}
+            nothing
+            {% endfor %}
+        <div class="row mt-3">
+
+            {% for object in object_list1 %}
+        <div class="col-sm-5 col-xs-5">
+        <h6>Username</h6>
+        </div>
+        <div class="col-sm-7 col-xs-7">
+            <p>{{ object.username }}</p>
+        </div>
+            </div>
+            <div class="row">
+        <div class="col-sm-5 col-xs-5">
+        <h6>Email</h6>
+        </div>
+        <div class="col-sm-7 col-xs-7">
+            <p>{{ object.email }}</p>
+        </div>
+            </div>
+            {% if request.user.email == object.email %}
+            <p><a class="btn btn-outline-primary" href="{% url 'update_profile' request.user.id %}" role="button">Update Profile »</a></p>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        </div>
+    </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--    {% for object in object_list1 %}-->
+<!--        User: {{ object.username }}-->
+<!--        Email : {{ object.email }}<br>-->
+<!--        Profile Pic : <img src="{{ object.profile_image.url }}" height="300" width="300"  alt="No image">-->
+<!--        {% empty %}-->
+<!--        <p>No objects yet</p>-->
+<!--{% endfor %}-->
+
+
+
+{% endblock %}

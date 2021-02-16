@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load hitcount_tags %}
+{% load static %}
+{% block style %}
+    .text-slider-items {
+        display: none;
+    }
+    img{
+    object-fit:cover;
+    object-position:center;
+    }
+    .demo
+    {
+    object-fit:cover;
+    object-position:top;
+    }
+{% endblock %}
+{% block link %} active {% endblock %}
+{% block content %}
+    {% for message in messages %}
+<div class="alert alert-success alert-dismissible fade show mt-1 mb-0" role="alert">
+  <strong>Message: </strong> {{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+    {% endfor %}
+    <section class="py-0 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+               <div class="heading">
+                   <img class="demo" src="{% static 'img/demo.jpg' %}" style="border-radius:30%;" width="30%" height="150" alt="">
+        <h1 class="fw-light text-danger">Django Blog Application</h1>
+        <h3>
+            <span class="text-slider-items">
+                Welcome to this beautiful website, Created by Don, haha.. just kidding, Explore funny things here
+            </span>
+            <strong class="text-slider"></strong>
+
+        </h3>
+    </div>
+        <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
+        <p>
+          <a href="{% url 'blog_list' %}" class="btn btn-primary my-2">Explore Blogs</a>
+          <a href="{% url 'blog_create' %}" class="btn btn-success my-2">Create your own</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+    <h3 class="text-danger mb-4"><i class="fa fa-fire" style='font-size:24px;'></i> Popular Articles</h3>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mb-5">
+          {% for post in popular_posts %}
+        <div class="col">
+          <div class="card shadow-sm">
+
+            <img class="bd-placeholder-img card-img-top" width="100%" height="225" src="{{ post.blog_image.url }}" alt="Image"/>
+
+            <div class="card-body">
+              <p class="card-text">{{ post.title }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a href="{% url 'blog_detail' post.slug %}" class="btn btn-sm btn-outline-secondary"><i class="fa fa-plus text-white me-1"></i>Read more</a>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                      <i class="fa fa-eye" style='font-size:18px;'></i> {% get_hit_count for post %}</button>
+                </div>
+                <small class="text-muted">
+                    {{ post.get_readtime }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+          {% endfor %}
+      </div>
+<!-- Import typed.min.js file from typed.js folder -->
+    <script src="{% static 'typed.js/lib/typed.min.js' %}">
+    </script>
+
+    <!-- Add jquery cdn -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+
+    <!-- Add this script for successful
+        implementation of typed.js  -->
+    <script>
+        if ($(".text-slider").length == 1) {
+
+            var typed_strings =
+                $(".text-slider-items").text();
+
+            var typed = new Typed(".text-slider", {
+                strings: typed_strings.split(", "),
+                typeSpeed: 50,
+                loop: true,
+                backDelay: 900,
+                backSpeed: 30,
+            });
+        }
+    </script>
+
+{% endblock %}

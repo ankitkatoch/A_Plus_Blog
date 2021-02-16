@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<style type="text/css">
+  .form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+  }
+
+  .form-signin .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+  }
+  .form-signin .form-control:focus {
+    z-index: 2;
+  }
+  .form-signin input[type="email"] {
+    margin-bottom: 0px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  .form-signin input[type="password"],{
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  .h3{
+    text-align: center;
+  }
+</style>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    {% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show m-0" role="alert">
+  <strong>Message: </strong> {{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+    {% endfor %}
+<form class="form-signin" method="post">{% csrf_token %}
+
+  <h1 class="h3 mb-3 font-weight-normal">Login</h1>
+    <div class="input-group mb-3">
+  <span class="input-group-text" id="basic-addon1">
+      <i class="fa fa-envelope" style="font-size: 18px;"></i>
+  </span>
+  <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+</div>
+    <div class="input-group mb-3">
+  <span class="input-group-text" id="basic-addon2"><i class="fa fa-key" style="font-size: 18px;"></i></span>
+  <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+</div>
+<div class="g-recaptcha" data-sitekey="6LfoRUsaAAAAACFagxvTfWdDmgO4TeGmEsScG1IA"></div>
+
+  {% for field in login_form %}
+      <p>
+        {% for error in field.errors %}
+            <i class="fa fa-home text-danger">fd</i>
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+      </p>
+  {% endfor %}
+{#  {% if login_form.non_field_errors %}#}
+{#    <div style="color: red">#}
+{#      <p><i class="fa fa-home text-danger">hyy</i>{{login_form.non_field_errors}}</p>#}
+{#    </div>#}
+{##}
+{#  {% endif %}#}
+<div class="row">
+    <div class="col-md-12 text-center">
+  <button class="btn btn-lg btn-primary btn-block mx-5" type="submit">Log in</button>
+        </div>
+    </div>
+
+</form>
+    <div class="d-flex flex-column">
+        <a class="m-auto" href="{% url 'password_reset' %}">Forgot Password</a>
+    </div>
+
+
+{% endblock content %}

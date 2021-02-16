@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    {% if update_status  %}
+        <h3 class="my-3 text-success">Update Blog Information</h3>
+        {% else %}
+    <h3 class="my-3 text-success">Create a blog</h3>
+    {% endif %}
+<form method="POST" enctype="multipart/form-data" m-3>
+
+	<!-- Security token -->
+	{% csrf_token %}
+
+	<!-- Using the formset -->
+    <div class="form-row">
+      <div class="form-group col-md-6 mb-2">
+        {{ form.title|as_crispy_field }}
+      </div>
+    </div>
+        <div class="form-row">
+        <div class="form-group col-md-12 mb-2">
+        {{ form.blog_image|as_crispy_field }}
+      </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-12 mb-2">
+        {{ form.description|as_crispy_field }}
+      </div>
+    </div>
+        <div class="form-row">
+        <div class="form-group col-md-12 mb-2">
+        {{ form.tags|as_crispy_field }}
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mb-4"><i class="fa fa-save text-white"> Save</i></button>
+</form>
+{% endblock %}

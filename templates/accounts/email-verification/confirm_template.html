@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+</head>
+<body>
+{% if success %}
+    <div class="d-flex justify-content-center">
+  <div class="spinner-border text-success mx-auto" role="status">
+    <span class="visually-hidden">Congratulations, {{ user.username }} your account has been activated..
+    We are redirecting you to home page
+    <meta http-equiv="REFRESH" content="5;url=http://127.0.0.1:8000/list/"> Loading...</span>
+  </div>
+</div>
+{% else %}
+Error, invalid token!
+{% endif %}
+</body>
+</html>

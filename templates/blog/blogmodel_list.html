@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load hitcount_tags %}
+{% block link1 %} active {% endblock %}
+{% block content %}
+
+    {% for message in messages %}
+<div class="alert alert-success alert-dismissible fade show m-0" role="alert">
+  <strong>Message: </strong> {{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+    {% endfor %}
+    {% if object_list %}
+                <div class="card mb-2 shadow-sm p-3 bg-white rounded">
+  <div class="card-body">
+      <div class="row">
+          <div class="col-md-4">
+              <form class="d-flex" action="{% url 'blog_search' %}" method="get">
+        <input class="form-control me-2" name="query" type="search" minlength="3" placeholder="Search" aria-label="Search" required>
+        <button class="btn btn-success" type="submit"><i class="fa fa-search text-white"></i></button>
+      </form>
+          </div>
+          {% for object in object_list %}
+              {% if objects.tags %}
+                {{ tags }}
+              {% endif %}
+          {% endfor %}
+      </div>
+        {% if tags %}
+      <div class="row">
+          <div class="col-md-8 mt-4">
+              Try some of these search terms:
+          </div>
+      </div>
+  <div class="row mt-0">
+          <div class="col-md-8 mt-4">
+
+              {% for tag in tags %}
+                  <a class="btn btn-outline-success animate__animated animate__fadeInDown  mb-2" href="{% url 'tagged' tag.slug %}">{{ tag.name }}</a>
+          {% endfor %}
+
+          </div>
+  </div>
+            {% endif %}
+  </div>
+                </div>
+    {% endif %}
+
+    {% for object in object_list %}
+        <div class="card mb-2 shadow-sm p-3 bg-white rounded animate__lightSpeedInLeft">
+  <div class="card-body">
+      <div class="row">
+          <div class="col-md-3 text-center">
+              <img src="{{ object.blog_image.url }}" alt="" height="200" width="200">
+          </div>
+          <div class="col-md-9">
+
+    <h5 class="card-title display-6 animate__lightSpeedInLeft">{{ object.title}}</h5>
+      <p class="card-text text-muted"><strong class="text-info">Created on : </strong>{{ object.created_on }} by <i>{{ object.author.username }}</i>
+           <i class="fa fa-eye ps-3 text-danger" style='font-size:22px;'></i> {% get_hit_count for object %}
+      <i class="fa fa-book ps-5 text-success" style='font-size:22px;'></i><span> {{ object.get_readtime }}</span>
+      </p>
+
+              <p>{{ object.description|slice:":300" }}</p>
+
+    <a href="{% url 'blog_detail' object.slug %}" class="btn btn-primary btn-outline"><i class="fa fa-plus text-white mx-2"></i>Read more</a>
+  </div>
+          </div>
+  </div>
+</div>
+
+        {% empty %}
+        <p>No objects yet</p>
+    {% endfor %}
+{#   Blog Pagination #}
+
+    {% if is_paginated %}
+<nav aria-label="...">
+  <ul class="pagination justify-content-center">
+      {% if page_obj.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+    {% else %}
+      <li class="page-item disabled">
+      <span class="page-link">Previous</span>
+    </li>
+    {% endif %}
+{% for i in paginator.page_range %}
+      {% if page_obj.number == i %}
+          <li class="page-item active">
+      <span class="page-link">
+        {{ i }}
+        <span class="sr-only">(current)</span>
+      </span>
+        </li>
+      {% else %}
+          <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+          {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+    {% else %}
+      <li class="page-item disabled">
+      <span class="page-link">Next</span>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+    {% endif %}
+
+{% endblock %}

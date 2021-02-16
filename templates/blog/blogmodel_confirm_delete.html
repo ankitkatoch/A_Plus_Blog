@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+{#    <h3 class="my-3 text-success">Create a blog</h3>#}
+<form method="POST" enctype="multipart/form-data">
+
+	<!-- Security token -->
+	{% csrf_token %}
+    <div class="jumbotron">
+  <h1 class="display-6">Do you really want to delete <span class="text-success">"{{ object.title }}"</span>  ?</h1>
+  <p class="lead">{{ object.description }}</p>
+  <hr class="my-4">
+  <p><strong class="text-primary">Created on : </strong>{{ object.created_on }}</p>
+            <input type="submit" class="btn btn-danger mb-5" value="Confirm Delete">
+    </div>
+
+</form>
+{% endblock %}
